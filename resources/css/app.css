@@ -1,3 +1,67 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ================================================================
+Konfigurasi Warna Dasar & Dark Mode (FIXED v3)
+================================================================
+*/
+@layer base {
+    /* Mengatur style dasar dan dark mode untuk body */
+    body {
+        @apply bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-200;
+    }
+}
+
+/*
+* ================================================================
+* PERBAIKAN SPESIFIK UNTUK DARK MODE
+* Kita menempatkan aturan ini di luar @layer base agar memiliki
+* prioritas yang lebih tinggi untuk menimpa style dari komponen.
+* ================================================================
+*/
+
+@media (prefers-color-scheme: dark) {
+    /*
+    * Menargetkan semua input, select, textarea yang berada di dalam
+    * elemen dengan kelas .dark-container (yang akan kita tambahkan)
+    * atau di dalam elemen form. Ini meningkatkan spesifisitas.
+    */
+    .dark-container input,
+    .dark-container select,
+    .dark-container textarea,
+    form input,
+    form select,
+    form textarea {
+        background-color: theme('colors.gray.800') !important;
+        border-color: theme('colors.gray.600') !important;
+        color: theme('colors.white') !important;
+    }
+
+    /* Perbaikan untuk warna placeholder di dark mode */
+    .dark-container input::placeholder,
+    .dark-container textarea::placeholder,
+    form input::placeholder,
+    form textarea::placeholder {
+        color: theme('colors.gray.400') !important;
+    }
+    
+    /* Perbaikan untuk warna label di dark mode */
+    .dark-container label,
+    form label {
+        color: theme('colors.gray.300') !important;
+    }
+
+    /* Mengatur skema warna untuk input tanggal */
+    input[type="date"] {
+        color-scheme: dark;
+    }
+
+    /* Override beberapa kelas umum lainnya */
+    .bg-white {
+        @apply bg-gray-800;
+    }
+    .text-gray-700 {
+        @apply text-gray-300;
+    }
+}
