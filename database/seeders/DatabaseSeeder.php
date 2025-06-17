@@ -19,22 +19,30 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
         ]);
         
-        // Buat user admin utama
-        User::create([
-            'name' => 'RANI',
-            'email' => 'rani.ariana@gmail.com',
-            'email_verified_at' => now(), // Verifikasi email secara otomatis
-            'password' => Hash::make('RANI123456'), // Menggunakan Hash::make() untuk enkripsi
-            'role' => 'admin', // Menetapkan peran sebagai admin
-        ]);
+        // Menggunakan updateOrCreate untuk membuat seeder yang aman.
+        // Perintah ini akan mencari user berdasarkan email.
+        // Jika tidak ada, user baru akan dibuat. Jika sudah ada, tidak akan terjadi apa-apa.
+        
+        // Buat atau update user admin utama
+        User::updateOrCreate(
+            ['email' => 'rani.ariana@gmail.com'], // Kondisi pencarian
+            [
+                'name' => 'RANI',
+                'password' => Hash::make('RANI123456'),
+                'email_verified_at' => now(),
+                'role' => 'admin',
+            ]
+        );
 
-        // Buat user roaster
-        User::create([
-            'name' => 'Tony',
-            'email' => 'tony@gmail.com',
-            'email_verified_at' => now(), // Verifikasi email secara otomatis
-            'password' => Hash::make('tony123'), // Menggunakan Hash::make() untuk enkripsi
-            'role' => 'roaster', // Menetapkan peran sebagai roaster
-        ]);
+        // Buat atau update user roaster
+        User::updateOrCreate(
+            ['email' => 'tony@gmail.com'], // Kondisi pencarian
+            [
+                'name' => 'Tony',
+                'password' => Hash::make('tony123'),
+                'email_verified_at' => now(),
+                'role' => 'roaster',
+            ]
+        );
     }
 }
