@@ -94,6 +94,8 @@ export default function AuthenticatedLayout({ auth, header, children }) {
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>Dashboard</ResponsiveNavLink>
                         <ResponsiveNavLink href={route('green-beans.index')} active={route().current().startsWith('green-beans')}>Green Beans</ResponsiveNavLink>
                         {/* ... tambahkan semua NavLink lainnya di sini ... */}
+                        <ResponsiveNavLink href={route('roast-batches.index')} active={route().current().startsWith('roast-batches')}>Roast Batches</ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('roasted-beans.index')} active={route().current().startsWith('roasted-beans')}>Roasted Beans</ResponsiveNavLink>
                         <ResponsiveNavLink href={route('packaging.create')} active={route().current('packaging.create')}>Pengemasan</ResponsiveNavLink>
                         <ResponsiveNavLink href={route('packaged-products.index')} active={route().current().startsWith('packaged-products')}>Produk Jadi</ResponsiveNavLink>
                         <ResponsiveNavLink href={route('reports.green-bean-usage')} active={route().current().startsWith('reports')}>Laporan</ResponsiveNavLink>
