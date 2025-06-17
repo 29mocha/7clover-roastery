@@ -2,66 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ================================================================
-Konfigurasi Warna Dasar & Dark Mode (FIXED v3)
-================================================================
-*/
-@layer base {
-    /* Mengatur style dasar dan dark mode untuk body */
-    body {
-        @apply bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-200;
-    }
-}
-
-/*
-* ================================================================
-* PERBAIKAN SPESIFIK UNTUK DARK MODE
-* Kita menempatkan aturan ini di luar @layer base agar memiliki
-* prioritas yang lebih tinggi untuk menimpa style dari komponen.
-* ================================================================
+/* * ================================================================
+ * ATURAN GLOBAL UNTUK DARK MODE
+ * Aturan ini akan menimpa kelas-kelas utility Tailwind saat
+ * dark mode aktif, memastikan tampilan konsisten di seluruh aplikasi.
+ * ================================================================
 */
 
 @media (prefers-color-scheme: dark) {
-    /*
-    * Menargetkan semua input, select, textarea yang berada di dalam
-    * elemen dengan kelas .dark-container (yang akan kita tambahkan)
-    * atau di dalam elemen form. Ini meningkatkan spesifisitas.
-    */
-    .dark-container input,
-    .dark-container select,
-    .dark-container textarea,
-    form input,
-    form select,
-    form textarea {
-        background-color: theme('colors.gray.800') !important;
-        border-color: theme('colors.gray.600') !important;
-        color: theme('colors.white') !important;
+    /* Mengatur warna dasar body */
+    body {
+        background-color: theme('colors.gray.900');
+        color: theme('colors.gray.200');
     }
 
-    /* Perbaikan untuk warna placeholder di dark mode */
-    .dark-container input::placeholder,
-    .dark-container textarea::placeholder,
-    form input::placeholder,
-    form textarea::placeholder {
-        color: theme('colors.gray.400') !important;
+    /* Menimpa kelas warna background yang umum */
+    .bg-white, .bg-gray-50, .bg-gray-100 {
+        background-color: theme('colors.gray.800') !important;
     }
-    
-    /* Perbaikan untuk warna label di dark mode */
-    .dark-container label,
-    form label {
+
+    /* Menimpa kelas warna teks yang umum */
+    .text-gray-500, .text-gray-600, .text-gray-700, .text-gray-800, .text-gray-900 {
         color: theme('colors.gray.300') !important;
     }
 
-    /* Mengatur skema warna untuk input tanggal */
-    input[type="date"] {
-        color-scheme: dark;
+    /* Menimpa kelas warna border yang umum */
+    .border-gray-200, .border-gray-300 {
+        border-color: theme('colors.gray.700') !important;
     }
 
-    /* Override beberapa kelas umum lainnya */
-    .bg-white {
-        @apply bg-gray-800;
+    /* Perbaikan spesifik untuk Form Inputs agar konsisten */
+    input, select, textarea {
+        background-color: theme('colors.gray.900') !important;
+        border-color: theme('colors.gray.700') !important;
+        color: theme('colors.white') !important;
     }
-    .text-gray-700 {
-        @apply text-gray-300;
+    
+    input::placeholder, textarea::placeholder {
+        color: theme('colors.gray.400') !important;
+    }
+
+    input[type="date"] {
+        color-scheme: dark;
     }
 }
