@@ -57,9 +57,9 @@ class StockAdjustment extends Model
 
     protected $casts = [
         'adjustment_date' => 'datetime',
-        'quantity_adjusted_g' => 'decimal:2',
-        'stock_before_adjustment_g' => 'decimal:2',
-        'stock_after_adjustment_g' => 'decimal:2',
+        'quantity_adjusted_g' => 'integer',
+        'stock_before_adjustment_g' => 'integer',
+        'stock_after_adjustment_g' => 'integer',
     ];
 
     /**

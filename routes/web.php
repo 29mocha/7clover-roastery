@@ -74,6 +74,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Inventaris Produk Jadi
     Route::get('/packaged-products/export', [PackagedProductController::class, 'export'])->name('packaged-products.export'); // <-- RUTE BARU YANG HILANG
+    Route::post('/packaged-products/{packagedProduct}/adjust-stock', [PackagedProductController::class, 'adjustStock'])->name('packaged-products.adjust-stock');
     Route::resource('packaged-products', PackagedProductController::class);
 
 
