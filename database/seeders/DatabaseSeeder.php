@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role; // <-- 1. IMPORT MODEL Role
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,41 +14,33 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Panggil seeder lain jika ada
         $this->call([
             SettingSeeder::class,
         ]);
 
-        // 2. BUAT PERAN TERLEBIH DAHULU
-        // Gunakan updateOrCreate agar aman jika seeder dijalankan berkali-kali
         $adminRole = Role::updateOrCreate(['name' => 'Admin']);
         $roasterRole = Role::updateOrCreate(['name' => 'Roaster']);
 
-        // 3. BUAT USER DAN BERIKAN PERAN
         // Buat atau update user RANI
         $userRani = User::updateOrCreate(
-            ['email' => 'rani.ariana@gmail.com'], // Kondisi pencarian
+            ['email' => 'rani.ariana@gmail.com'],
             [
                 'name' => 'RANI',
                 'password' => Hash::make('RANI123456'),
-                'email_verified_at' => now(),
+                // 'email_verified_at' => now(), // <-- HAPUS BARIS INI
             ]
         );
-        // Berikan peran Admin kepada RANI
         $userRani->assignRole($adminRole);
-
 
         // Buat atau update user Tony
         $userTony = User::updateOrCreate(
-            ['email' => 'tony@gmail.com'], // Kondisi pencarian
+            ['email' => 'tony@gmail.com'],
             [
                 'name' => 'Tony',
                 'password' => Hash::make('tony123'),
-                'email_verified_at' => now(),
+                // 'email_verified_at' => now(), // <-- HAPUS BARIS INI JUGA
             ]
         );
-        // Berikan peran Admin kepada Tony (sesuai permintaan)
         $userTony->assignRole($adminRole);
     }
 }
-
