@@ -10,7 +10,6 @@ export default function Welcome({ auth }) {
     // Style untuk latar belakang dengan tekstur clover
     const texturedBackgroundStyle = {
         backgroundColor: '#556B2F', // Warna dasar hijau army
-        // ==== PERUBAHAN DI SINI: Menggunakan pola SVG baru yang menyerupai clover ====
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='88' height='88' viewBox='0 0 88 88' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M33 88c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zm22 0c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zM55 22c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zM33 22c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zM88 55c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm0-22c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zM22 55c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm0-22c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8z'/%3E%3C/g%3E%3C/svg%3E")`,
     };
 
@@ -30,7 +29,7 @@ export default function Welcome({ auth }) {
             >
                 
                 {/* Kolom Kiri: Sisi Logo dengan Latar Belakang Hitam */}
-                <div className="w-full md:w-1/2 bg-black flex items-center justify-center p-8 sm:p-12 order-1 md:order-1">
+                <div className="w-full md:w-1/2 bg-black flex flex-grow items-center justify-center p-8 sm:p-12 order-1 md:order-1">
                     <img
                         src="/images/logo.png"
                         alt="7 Clover Roastery Logo"
@@ -40,7 +39,7 @@ export default function Welcome({ auth }) {
 
                 {/* Kolom Kanan: Sisi Konten dengan Latar Belakang Bertekstur */}
                 <div 
-                    className="w-full md:w-1/2 text-white flex items-center justify-center p-8 sm:p-12 order-2 md:order-2"
+                    className="w-full md:w-1/2 text-white flex flex-grow items-center justify-center p-8 sm:p-12 order-2 md:order-2"
                     style={texturedBackgroundStyle} // Menggunakan style object
                 >
                     <div className="max-w-md w-full text-center md:text-left">
