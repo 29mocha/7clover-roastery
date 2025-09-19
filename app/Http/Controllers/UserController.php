@@ -10,27 +10,27 @@ use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Auth; // <-- Pastikan import ini ada
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role; // <-- 1. IMPORT MODEL ROLE
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        // Untuk sementara kita proteksi manual per method dengan Gate
-    }
-
     public function index()
     {
         $this->authorize('manage-app');
         return Inertia::render('Users/Index', [
-            'users' => User::orderBy('name')->get(),
+            // Ambil user beserta rolenya
+            'users' => User::with('roles')->orderBy('name')->get(),
         ]);
     }
 
     public function create()
     {
         $this->authorize('manage-app');
-        return Inertia::render('Users/Create');
+        return Inertia::render('Users/Create', [
+            // Kirim daftar role ke frontend
+            'roles' => Role::all()->pluck('name'),
+        ]);
     }
 
     public function store(Request $request)
@@ -39,16 +39,20 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'role' => ['required', 'string', Rule::in(['admin', 'roaster'])],
+            // <-- 2. UBAH VALIDASI ROLE
+            'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
             'password' => Hash::make($request->password),
+            // 'role' => $request->role, // <-- HAPUS BARIS INI
         ]);
+
+        // <-- 3. GUNAKAN assignRole() UNTUK MEMBERI PERAN
+        $user->assignRole($request->role);
 
         event(new Registered($user));
 
@@ -59,50 +63,52 @@ class UserController extends Controller
     {
         $this->authorize('manage-app');
         return Inertia::render('Users/Edit', [
-            'user' => $user,
+            'user' => $user->load('roles'), // Muat role yang dimiliki user
+            'roles' => Role::all()->pluck('name'), // Kirim semua role yang ada
         ]);
     }
 
-   /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, User $user)
     {
         $this->authorize('manage-app');
 
-        // ==== PERBAIKAN UTAMA DI SINI PADA ATURAN VALIDASI EMAIL ====
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
-            'role' => ['required', 'string', Rule::in(['admin', 'roaster'])],
+            // <-- 4. UBAH VALIDASI ROLE
+            'role' => ['required', 'string', Rule::exists('roles', 'name')],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
         ]);
 
         // Update data dasar
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->role = $validated['role'];
+        $user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ]);
 
         // Hanya update password jika diisi
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
+            $user->save();
         }
 
-        $user->save();
+        // <-- 5. GUNAKAN syncRoles() UNTUK UPDATE PERAN
+        // syncRoles akan menghapus role lama dan memberi role baru.
+        $user->syncRoles($validated['role']);
 
         return Redirect::route('users.index')->with('success', 'Data user berhasil diupdate.');
     }
-
 
     public function destroy(User $user)
     {
         $this->authorize('manage-app');
         
-        // ==== PERBAIKAN DI SINI ====
-        // Ganti auth()->id() dengan Auth::id()
         if ($user->id === Auth::id()) {
             return Redirect::back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
+
+        // Pastikan user tidak memiliki peran penting sebelum dihapus jika perlu
+        // Contoh: if ($user->hasRole('Super-Admin')) { ... }
 
         $user->delete();
 

@@ -23,10 +23,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
 {
     Gate::define('manage-app', function (User $user) {
-        // Hentikan aplikasi dan tampilkan isi dari $user->role
-
-        // Kode di bawah ini tidak akan pernah dijalankan untuk sementara
-        return $user->role === 'admin';
-    });
+    // Periksa apakah user memiliki peran 'Admin'
+    return $user->hasRole('Admin');
+});
 }
 }

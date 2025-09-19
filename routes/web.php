@@ -39,7 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified']) // <-- TAMBAHKAN 'verified' DI SINI
+    ->middleware(['auth'])
     ->name('dashboard');
 
     // Profile (Bawaan Breeze)

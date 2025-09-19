@@ -1,17 +1,20 @@
 // resources/js/Pages/Users/Create.jsx
 
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
+import InputError from '../../Components/InputError';
+import InputLabel from '../../Components/InputLabel';
+import PrimaryButton from '../../Components/PrimaryButton';
+import TextInput from '../../Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Create({ auth }) {
+// 1. Terima 'roles' sebagai props dari controller
+export default function Create({ auth, roles }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
-        role: 'roaster', // Peran default adalah roaster
+        // 2. Set nilai default role ke peran pertama yang ada di daftar
+        // Ini lebih aman daripada hardcode 'Roaster'
+        role: roles.length > 0 ? roles[0] : '',
         password: '',
         password_confirmation: '',
     });
@@ -19,7 +22,7 @@ export default function Create({ auth }) {
     const submit = (e) => {
         e.preventDefault();
         post(route('users.store'), {
-            onSuccess: () => reset('password', 'password_confirmation'), // Reset field password setelah sukses
+            onSuccess: () => reset('password', 'password_confirmation'),
         });
     };
 
@@ -63,6 +66,7 @@ export default function Create({ auth }) {
                                     <InputError message={errors.email} className="mt-2" />
                                 </div>
 
+                                {/* ==== PERUBAHAN UTAMA DI SINI ==== */}
                                 <div>
                                     <InputLabel htmlFor="role" value="Peran (Role) *" />
                                     <select
@@ -73,8 +77,12 @@ export default function Create({ auth }) {
                                         className="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                         required
                                     >
-                                        <option value="roaster">Roaster</option>
-                                        <option value="admin">Admin</option>
+                                        {/* 3. Buat <option> secara dinamis dari props 'roles' */}
+                                        {roles.map((roleName) => (
+                                            <option key={roleName} value={roleName}>
+                                                {roleName}
+                                            </option>
+                                        ))}
                                     </select>
                                     <InputError message={errors.role} className="mt-2" />
                                 </div>
@@ -127,3 +135,4 @@ export default function Create({ auth }) {
         </AuthenticatedLayout>
     );
 }
+
